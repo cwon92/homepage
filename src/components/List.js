@@ -1,4 +1,4 @@
-import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc } from "firebase/firestore";
+import { collection, getDocs, addDoc, deleteDoc, doc, updateDoc, setDoc } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import { db } from '../firebase';
 
@@ -62,26 +62,27 @@ function List() {
     setTitle("");
     setContent("");
 
+
     await addDoc(collection(db, "list"), {
       title: title,
       content: content
     });
 
     setListArr([]);
-    console.log(listArr)
 
     await getList();
 
-    console.log(listArr)
+
+
   }
 
   const getList = async () => {
 
     const querySnapshot = await getDocs(collection(db, "list"));
 
-    querySnapshot.forEach((doc) => {
-      setListArr([...listArr, { ...doc.data(), id: doc.id }])
-    });
+    setListArr(querySnapshot.docs.map((e) => e.data()))
+
+
   }
 
   useEffect(() => {
